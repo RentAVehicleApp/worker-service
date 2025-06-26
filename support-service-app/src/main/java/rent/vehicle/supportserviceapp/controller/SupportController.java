@@ -4,10 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import rent.vehicle.dto.*;
+import rent.vehicle.dto.request.CreateUserDto;
+import rent.vehicle.support.model.dto.*;
 import rent.vehicle.supportserviceapp.service.SupportClientService;
+
+import java.util.Map;
+import java.util.Set;
 
 
 @RestController
@@ -16,25 +21,68 @@ import rent.vehicle.supportserviceapp.service.SupportClientService;
 public class SupportController {
     private final SupportClientService supportClientService;
 
-    @PostMapping("/device")
-    public Mono<DeviceDto> createDeviceDto(@RequestBody DeviceCreateUpdateDto deviceCreateUpdateDto) {
-        return supportClientService.createDevice(deviceCreateUpdateDto);
+    @PostMapping("/user")
+    public Mono<UserDto> createUserDto(@RequestBody CreateUserDto userCreateDto) {
+        return supportClientService.createUser(userCreateDto);
     }
 
-    @PostMapping("/devconf")
-    public Mono<DeviceConfigDto> createDeviceConfig(@RequestBody DeviceConfigCreateUpdateDto deviceConfigCreateUpdateDto) {
-        System.out.println("createDeviceConfig");
-        return supportClientService.createDeviceConfig(deviceConfigCreateUpdateDto);
+    @PostMapping("/supporter")
+    public ResponseSupporterDto createSupporter(@RequestBody CreateSupporterDto createSupporterDto) {
+        return supportClientService.createSupporter(createSupporterDto);
+    }
+    @PostMapping("supporter/{id}/update")
+    public ResponseSupporterDto updateSupporter(@PathVariable Long id, @RequestBody UpdateSupporterDto updateSupporterDto) {
+        return supportClientService.updateSupporter(id,updateSupporterDto);
+    }
+    @GetMapping("supporter/{id}")
+    public ResponseSupporterDto getSupporter(@PathVariable Long id) {
+        return supportClientService.findSupporter(id);
+    }
+    @DeleteMapping("supporter/{id}")
+    public Boolean deleteSupporter(@PathVariable Long id) {
+        return supportClientService.removeSupporter(id);
+    }
+    @PostMapping("/ticket")
+    public CreateTicketDto createTicket(@RequestBody CreateTicketDto createTicketDto) {
+        return supportClientService.createTicker(createTicketDto);
+    }
+    @PostMapping("/ticket/{id}")
+    public UpdateTicketDto updateTicket(@PathVariable Long id, @RequestBody UpdateTicketDto updateTicketDto) {
+        return supportClientService.updateTicket(id,updateTicketDto);
+    }
+    @GetMapping("/ticket/{id}")
+    public ResponseTicketDto getTicket(@PathVariable Long id){
+        return supportClientService.findTicket(id);
+    }
+    @DeleteMapping("/ticket/{id}")
+    public Boolean deleteTicket(@PathVariable Long id){
+        return supportClientService.removeTicket(id);
+    }
+    @PostMapping("/ticket/{ticketId}/assign/{supporterId}")
+    public ResponseTicketDto assignTicket(@PathVariable Long ticketId, @PathVariable Long supporterId){
+        return supportClientService.assignTicket(ticketId,supporterId);
+    }
+    @PostMapping("/ticket/{id}/close")
+    public ResponseTicketDto closeTicket(@PathVariable Long id){
+        return supportClientService.closeTicket(id);
+    }
+    @PostMapping("ticket/{ticketId}/reassign/{supporterId}")
+    public ResponseTicketDto reassignTicket(@PathVariable Long ticketId, @PathVariable Long supporterId){
+        return supportClientService.reassignTicket(ticketId,supporterId);
+    }
+    @GetMapping("supporter/{id}")
+    public int GetSupporterWorkload(@PathVariable Long id){
+        return supportClientService.getSupporterWorkload(id);
+    }
+    @GetMapping("/tickets")
+    public Set<ResponseTicketDto> getAllTickets(){
+        return supportClientService.getAllTickets();
+    }
+    @GetMapping("/supporters")
+    public Map<ResponseSupporterDto,Set<ResponseTicketDto>> getAllSupporters(){
+        return supportClientService.getAllSuporters();
     }
 
-    @GetMapping("/vehicles/list")
-    public Mono<Page<VehicleDto>> findAllVehicles(
-            @PageableDefault(
-                    size = 2
-            )
-            Pageable pageable) {
-        return supportClientService.findAllVehicles(pageable);
-    }
 
 
 }
