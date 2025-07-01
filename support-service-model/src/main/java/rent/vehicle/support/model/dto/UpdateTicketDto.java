@@ -11,7 +11,5 @@ import java.time.Instant;
 public class UpdateTicketDto {
     private String header;
     private String problem;
-    private TicketStatus status;
-    private Instant createdAt;
-    private CreateSupporterDto assignedTo;
+    private final Instant updatedTime = Instant.now();
 }

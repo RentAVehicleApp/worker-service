@@ -7,6 +7,8 @@ import lombok.Setter;
 import rent.vehicle.support.model.dto.UserDto;
 import rent.vehicle.support.model.enums.TicketStatus;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -15,21 +17,23 @@ public class TicketEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String createdByUserId;
+    private Long createdByUserId;
     private String createdByUserName;
     private String header;
     private String problem;
     private TicketStatus status;
+    private Instant createdDate;
+    private Instant updatedDate;
     @ManyToOne(fetch = FetchType.LAZY)
     private SupporterEntity assignedTo;
 
-    public void AssignTo(SupporterEntity assignedTo){
+    public void assignTo(SupporterEntity assignedTo){
         this.assignedTo = assignedTo;
     }
-    public void CloseTicket(){
+    public void closeTicket(){
         setStatus(TicketStatus.COMPLETED);
     }
-    public boolean CanBeAssigned(){
+    public boolean canBeAssigned(){
         return getStatus() != TicketStatus.COMPLETED && getStatus() != TicketStatus.CANCELLED;
     }
 

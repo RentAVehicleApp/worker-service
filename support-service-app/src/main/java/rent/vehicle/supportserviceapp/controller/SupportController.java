@@ -36,26 +36,30 @@ public class SupportController {
     }
     @GetMapping("supporter/{id}")
     public ResponseSupporterDto getSupporter(@PathVariable Long id) {
+
         return supportClientService.findSupporter(id);
     }
     @DeleteMapping("supporter/{id}")
     public Boolean deleteSupporter(@PathVariable Long id) {
+
         return supportClientService.removeSupporter(id);
     }
     @PostMapping("/ticket")
-    public CreateTicketDto createTicket(@RequestBody CreateTicketDto createTicketDto) {
-        return supportClientService.createTicker(createTicketDto);
+    public ResponseTicketDto createTicket(@RequestBody CreateTicketDto createTicketDto) {
+        return supportClientService.createTicket(createTicketDto);
     }
     @PostMapping("/ticket/{id}")
-    public UpdateTicketDto updateTicket(@PathVariable Long id, @RequestBody UpdateTicketDto updateTicketDto) {
+    public ResponseTicketDto updateTicket(@PathVariable Long id, @RequestBody UpdateTicketDto updateTicketDto) {
         return supportClientService.updateTicket(id,updateTicketDto);
     }
     @GetMapping("/ticket/{id}")
     public ResponseTicketDto getTicket(@PathVariable Long id){
+
         return supportClientService.findTicket(id);
     }
     @DeleteMapping("/ticket/{id}")
     public Boolean deleteTicket(@PathVariable Long id){
+
         return supportClientService.removeTicket(id);
     }
     @PostMapping("/ticket/{ticketId}/assign/{supporterId}")
@@ -64,6 +68,7 @@ public class SupportController {
     }
     @PostMapping("/ticket/{id}/close")
     public ResponseTicketDto closeTicket(@PathVariable Long id){
+
         return supportClientService.closeTicket(id);
     }
     @PostMapping("ticket/{ticketId}/reassign/{supporterId}")
@@ -72,15 +77,17 @@ public class SupportController {
     }
     @GetMapping("supporter/{id}")
     public int GetSupporterWorkload(@PathVariable Long id){
+
         return supportClientService.getSupporterWorkload(id);
     }
     @GetMapping("/tickets")
-    public Set<ResponseTicketDto> getAllTickets(){
+    public Page<ResponseTicketDto> getAllTickets(){
+
         return supportClientService.getAllTickets();
     }
     @GetMapping("/supporters")
-    public Map<ResponseSupporterDto,Set<ResponseTicketDto>> getAllSupporters(){
-        return supportClientService.getAllSuporters();
+    public Page<SupportWithTicketsDto> getAllSupporters(@RequestBody Pageable pageable){
+        return supportClientService.getAllSupporters(pageable);
     }
 
 

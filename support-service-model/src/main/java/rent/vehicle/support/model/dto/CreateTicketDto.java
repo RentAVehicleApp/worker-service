@@ -8,14 +8,14 @@ import rent.vehicle.support.model.enums.TicketStatus;
 import java.time.Instant;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class CreateTicketDto {
     private Long id;
-    private String createdByUserId;
+    private Long createdByUserId;
     private String createdByUserName;
     private String header;
     private String problem;
-    private Instant createdAt;
-    private TicketStatus status;
+    private final Instant createdDate =  Instant.now();
+    private final Instant updatedAt =  Instant.now();
+    private final TicketStatus status = TicketStatus.TODO;
 }

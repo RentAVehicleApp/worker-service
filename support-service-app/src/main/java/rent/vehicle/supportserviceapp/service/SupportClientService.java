@@ -7,6 +7,9 @@ import rent.vehicle.dto.*;
 import rent.vehicle.dto.request.CreateUserDto;
 import rent.vehicle.support.model.dto.*;
 
+import java.util.Map;
+import java.util.Set;
+
 public interface SupportClientService {
 
 
@@ -21,11 +24,25 @@ public interface SupportClientService {
 
     Boolean removeSupporter(Long id);
 
-    CreateTicketDto createTicker(CreateTicketDto createTicketDto);
+    ResponseTicketDto createTicket(CreateTicketDto createTicketDto);
 
-    UpdateTicketDto updateTicket(Long id, UpdateTicketDto updateTicketDto);
+    ResponseTicketDto updateTicket(Long id, UpdateTicketDto updateTicketDto);
 
     ResponseTicketDto findTicket(Long id);
 
     Boolean removeTicket(Long id);
+
+    ResponseTicketDto assignTicket(Long ticketId, Long supporterId);
+
+    ResponseTicketDto closeTicket(Long id);
+
+    ResponseTicketDto reassignTicket(Long ticketId, Long supporterId);
+
+    int getSupporterWorkload(Long id);
+
+    Page<ResponseTicketDto> getAllTickets();
+
+    Page<SupportWithTicketsDto> getAllSupporters(Pageable pageable);
+
+    void autoAssignTicket(Long ticketId);
 }

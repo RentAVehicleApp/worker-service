@@ -9,7 +9,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class CreateSupporterDto {
-    private Long id;
     private static final String password = "123456";
     private String login;
     private String name;
