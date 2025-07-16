@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-17 AS builder
+FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
 # Copy pom files
@@ -16,8 +16,8 @@ COPY worker-service-model/src worker-service-model/src
 # Build the application
 RUN mvn clean package -DskipTests
 
-# Runtime stage
-FROM eclipse-temurin:17-jre-alpine
+# Runtime stage - также Java 21
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 # Copy the built artifact
@@ -26,5 +26,5 @@ COPY --from=builder /app/worker-service-app/target/*.jar app.jar
 # Expose port
 EXPOSE 8080
 
-# Run the application with Railway environment
+# Run the application
 ENTRYPOINT ["java", "-Dspring.profiles.active=railway", "-jar", "app.jar"]
