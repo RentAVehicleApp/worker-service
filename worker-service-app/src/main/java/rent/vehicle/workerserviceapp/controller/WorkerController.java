@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import rent.vehicle.workerserviceapp.service.WorkerClientService;
+import rent.vehicle.workerservicemodel.common.common.CustomPage;
 import rent.vehicle.workerservicemodel.dto.*;
 
 @RestController
@@ -70,14 +71,23 @@ public class WorkerController {
         return workerClientService.getWorkerWorkload(id);
     }
     @GetMapping("/tickets")
-    public Page<ResponseTicketDto> getAllTickets(){
+    public CustomPage<ResponseTicketDto> getAllTickets(){
 
         return workerClientService.getAllTickets();
     }
     @GetMapping("/supporters")
-    public Page<WorkerWithTicketsDto> getAllSupporters(@RequestBody Pageable pageable){
+    public CustomPage<WorkerWithTicketsDto> getAllSupporters(@RequestBody Pageable pageable){
         return workerClientService.getAllWorkers(pageable);
     }
+    @PostMapping("/search/workers")
+    public CustomPage<ResponseWorkerDto> searchWorkers(@RequestBody GenericSearchRequest request) {
+        return workerClientService.searchWorkers(request);
+    }
+    @PostMapping("/search/workers")
+    public CustomPage<ResponseTicketDto> searchTickets(@RequestBody GenericSearchRequest request) {
+        return workerClientService.searchTickets(request);
+    }
+
 
 
 

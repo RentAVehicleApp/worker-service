@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import rent.vehicle.workerserviceapp.domain.TicketEntity;
@@ -12,6 +14,8 @@ import rent.vehicle.workerserviceapp.domain.WorkerEntity;
 import rent.vehicle.workerserviceapp.event.TicketCreatedEventPublisher;
 import rent.vehicle.workerserviceapp.repository.TicketRepository;
 import rent.vehicle.workerserviceapp.repository.WorkerRepository;
+import rent.vehicle.workerserviceapp.service.specification.WorkerSpecificationBuilder;
+import rent.vehicle.workerservicemodel.common.common.CustomPage;
 import rent.vehicle.workerservicemodel.dto.*;
 import rent.vehicle.workerservicemodel.exception.TicketCannotBeAssignedException;
 import rent.vehicle.workerservicemodel.exception.WorkerNotFoundException;
@@ -27,6 +31,9 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     private final WorkerRepository workerRepository;
     private final TicketRepository ticketRepository;
     private final TicketCreatedEventPublisher publisher;
+    //ToDO change specification name
+    private final WorkerSpecificationBuilder<WorkerEntity> workerSpecificationBuilder;
+    private final WorkerSpecificationBuilder<TicketEntity> ticketSpecificationBuilder;
 
 
     @Override
@@ -178,18 +185,20 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     }
 
     @Override
-    public Page<ResponseTicketDto> getAllTickets() {
+    public CustomPage<ResponseTicketDto> getAllTickets() {
         //TODO Add Security Validation for only supporters can get all Tickets
         Pageable pageable = PageRequest.of(0, 10);
         Page<TicketEntity> allTickets = ticketRepository.findAll(pageable);
-        return allTickets.map(ticket->modelMapper.map(ticket,ResponseTicketDto.class));
+        CustomPage<TicketEntity> allCustomPageTickets = CustomPage.from(allTickets);
+        return allCustomPageTickets.map(ticket->modelMapper.map(ticket,ResponseTicketDto.class));
     }
 
     @Override
-    public Page<WorkerWithTicketsDto> getAllWorkers(Pageable pageable) {
+    public CustomPage<WorkerWithTicketsDto> getAllWorkers(Pageable pageable) {
+        Page<WorkerEntity> allWorkersWithTicketsPage = workerRepository.findAll(pageable);
+        CustomPage<WorkerEntity> allWorkersWithTicketsCustomPage = CustomPage.from(allWorkersWithTicketsPage);
 
-
-        return workerRepository.findAll(pageable)
+        return allWorkersWithTicketsCustomPage
                 .map(supporterEntity ->{
                     WorkerWithTicketsDto workerWithTicketsDto = new WorkerWithTicketsDto();
                     workerWithTicketsDto.setLogin(supporterEntity.getLogin());
@@ -211,6 +220,45 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     }
 
     }
+
+    @Override
+    public CustomPage<ResponseWorkerDto> searchWorkers(GenericSearchRequest request) {
+        String[] parts = request.getSort().split(",");
+        String sortField = parts[0];
+        Sort.Direction direction = parts.length > 1
+                ? Sort.Direction.fromString(parts[1].trim())
+                : Sort.Direction.ASC; // по умолчанию ASC, если не указано
+
+        Sort sort = Sort.by(new Sort.Order(direction, sortField));
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
+        Specification<WorkerEntity> spec = workerSpecificationBuilder.buildFromRequest(request);
+        Page<WorkerEntity> page = workerRepository.findAll(spec, pageable);
+        CustomPage<WorkerEntity> customPage = CustomPage.from(page);
+        return customPage.map(entity -> modelMapper.map(entity, ResponseWorkerDto.class));
+    }
+
+    @Override
+    public CustomPage<ResponseTicketDto> searchTickets(GenericSearchRequest request) {
+        String[] parts = request.getSort().split(",");
+        //TODO поставить sort внутри спецификациибилдер
+        String sortField = parts[0];
+        Sort.Direction direction = parts.length > 1
+                ? Sort.Direction.fromString(parts[1].trim())
+                : Sort.Direction.ASC; // по умолчанию ASC, если не указано
+
+        Sort sort = Sort.by(new Sort.Order(direction, sortField));
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
+        Specification<TicketEntity> spec = ticketSpecificationBuilder.buildFromRequest(request);
+        Page<TicketEntity> page = ticketRepository.findAll(spec, pageable);
+        CustomPage<TicketEntity> customPage = CustomPage.from(page);
+        return customPage.map(entity -> modelMapper.map(entity, ResponseTicketDto.class));
+    }
+
+
     //TODO AutoAssignTicket with TicketEvent
 
 

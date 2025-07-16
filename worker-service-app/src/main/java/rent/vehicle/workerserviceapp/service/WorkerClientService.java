@@ -2,6 +2,7 @@ package rent.vehicle.workerserviceapp.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import rent.vehicle.workerservicemodel.common.common.CustomPage;
 import rent.vehicle.workerservicemodel.dto.*;
 
 
@@ -36,9 +37,15 @@ public interface WorkerClientService {
 
     int getWorkerWorkload(Long id);
 
-    Page<ResponseTicketDto> getAllTickets();
+    CustomPage<ResponseTicketDto> getAllTickets();
 
-    Page<WorkerWithTicketsDto> getAllWorkers(Pageable pageable);
+    CustomPage<WorkerWithTicketsDto> getAllWorkers(Pageable pageable);
 
     void autoAssignTicket(Long ticketId);
+
+
+
+    CustomPage<ResponseWorkerDto> searchWorkers(GenericSearchRequest request);
+
+    CustomPage<ResponseTicketDto> searchTickets(GenericSearchRequest request);
 }
