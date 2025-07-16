@@ -83,7 +83,7 @@ public class WorkerController {
     public CustomPage<ResponseWorkerDto> searchWorkers(@RequestBody GenericSearchRequest request) {
         return workerClientService.searchWorkers(request);
     }
-    @PostMapping("/search/workers")
+    @PostMapping("/search/tickets")
     public CustomPage<ResponseTicketDto> searchTickets(@RequestBody GenericSearchRequest request) {
         return workerClientService.searchTickets(request);
     }
