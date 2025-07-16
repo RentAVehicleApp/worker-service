@@ -16,7 +16,7 @@ public class WorkerController {
 
 
 
-    @PostMapping("/supporter")
+    @PostMapping
     public ResponseWorkerDto createWorker(@RequestBody CreateWorkerDto createWorkerDto) {
         return workerClientService.createWorker(createWorkerDto);
     }
