@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class WorkerSpecificationBuilder<T> {
     public Specification buildFromRequest(GenericSearchRequest request) {
-        if(request.getSearchCriteriaList()!=null || request.getSearchCriteriaList().isEmpty()){
+        if(request.getSearchCriteriaList()!=null && request.getSearchCriteriaList().isEmpty()){
             return  null;
         }
 
@@ -56,7 +56,7 @@ public class WorkerSpecificationBuilder<T> {
             }else if(javaType==Long.class){
                 value = Long.parseLong(stringValue);
             }else if(javaType== Instant.class){
-                value = LocalDateTime.parse(stringValue);
+                value = Instant.parse(stringValue);
             }else{
                 value = stringValue;
             }

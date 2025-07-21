@@ -79,13 +79,13 @@ public class WorkerController {
     public CustomPage<WorkerWithTicketsDto> getAllSupporters(@RequestBody Pageable pageable){
         return workerClientService.getAllWorkers(pageable);
     }
-    @PostMapping("/search/workers")
-    public CustomPage<ResponseWorkerDto> searchWorkers(@RequestBody GenericSearchRequest request) {
-        return workerClientService.searchWorkers(request);
+    @GetMapping("/search/workers")
+    public CustomPage<ResponseWorkerDto> searchWorkers(@ModelAttribute GenericSearchRequest genericSearchRequest) {
+        return workerClientService.searchWorkers(genericSearchRequest);
     }
-    @PostMapping("/search/tickets")
-    public CustomPage<ResponseTicketDto> searchTickets(@RequestBody GenericSearchRequest request) {
-        return workerClientService.searchTickets(request);
+    @GetMapping("/search/tickets")
+    public CustomPage<ResponseTicketDto> searchTickets(@ModelAttribute GenericSearchRequest genericSearchRequest) {
+        return workerClientService.searchTickets(genericSearchRequest);
     }
 
 
