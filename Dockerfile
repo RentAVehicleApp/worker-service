@@ -8,8 +8,6 @@ COPY worker-service-model/pom.xml worker-service-model/
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
-RUN mvn clean package -Pdocker
-
 # Copy source code
 COPY worker-service-app/src worker-service-app/src
 COPY worker-service-model/src worker-service-model/src
