@@ -6,18 +6,17 @@ import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import rent.vehicle.workerservicemodel.dto.GenericSearchRequest;
-import rent.vehicle.workerservicemodel.dto.SearchCriteria;
+import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
+import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
 
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class WorkerSpecificationBuilder<T> {
+public class GenericSpecificationBuilder<T> {
     public Specification buildFromRequest(GenericSearchRequest request) {
         if(request.getSearchCriteriaList()!=null && request.getSearchCriteriaList().isEmpty()){
             return  null;

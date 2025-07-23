@@ -2,7 +2,7 @@ package rent.vehicle.workerserviceapp.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import rent.vehicle.workerserviceapp.domain.TicketEntity;
+import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 
 
 public class TicketCreatedEvent extends ApplicationEvent {

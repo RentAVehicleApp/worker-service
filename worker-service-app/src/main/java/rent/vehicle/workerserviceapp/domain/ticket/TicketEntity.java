@@ -1,9 +1,10 @@
-package rent.vehicle.workerserviceapp.domain;
+package rent.vehicle.workerserviceapp.domain.ticket;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import rent.vehicle.workerserviceapp.domain.worker.WorkerEntity;
 import rent.vehicle.workerservicemodel.enums.TicketStatus;
 
 

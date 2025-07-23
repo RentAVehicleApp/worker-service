@@ -1,11 +1,13 @@
-package rent.vehicle.workerserviceapp.service;
+package rent.vehicle.workerserviceapp.service.worker;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rent.vehicle.workerservicemodel.common.common.CustomPage;
-import rent.vehicle.workerservicemodel.dto.*;
-
-
+import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
+import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
+import rent.vehicle.workerservicemodel.dto.worker.CreateWorkerDto;
+import rent.vehicle.workerservicemodel.dto.worker.ResponseWorkerDto;
+import rent.vehicle.workerservicemodel.dto.worker.UpdateWorkerDto;
+import rent.vehicle.workerservicemodel.dto.worker.WorkerWithTicketsDto;
 
 
 public interface WorkerClientService {
@@ -21,31 +23,14 @@ public interface WorkerClientService {
 
     Boolean removeWorker(Long id);
 
-    ResponseTicketDto createTicket(CreateTicketDto createTicketDto);
-
-    ResponseTicketDto updateTicket(Long id, UpdateTicketDto updateTicketDto);
-
-    ResponseTicketDto findTicket(Long id);
-
-    Boolean removeTicket(Long id);
+    int getWorkerWorkload(Long id);
 
     ResponseTicketDto assignTicket(Long ticketId, Long supporterId);
 
-    ResponseTicketDto closeTicket(Long id);
-
     ResponseTicketDto reassignTicket(Long ticketId, Long supporterId);
-
-    int getWorkerWorkload(Long id);
-
-    CustomPage<ResponseTicketDto> getAllTickets();
 
     CustomPage<WorkerWithTicketsDto> getAllWorkers(Pageable pageable);
 
-    void autoAssignTicket(Long ticketId);
-
-
-
     CustomPage<ResponseWorkerDto> searchWorkers(GenericSearchRequest request);
 
-    CustomPage<ResponseTicketDto> searchTickets(GenericSearchRequest request);
 }

@@ -2,7 +2,7 @@ package rent.vehicle.workerserviceapp.event;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import rent.vehicle.workerserviceapp.domain.TicketEntity;
+import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 
 @Component
 public class TicketCreatedEventPublisher {

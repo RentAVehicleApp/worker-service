@@ -1,4 +1,4 @@
-package rent.vehicle.workerserviceapp.domain;
+package rent.vehicle.workerserviceapp.domain.worker;
 
 
 import jakarta.persistence.*;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class WorkerEntity {
     @OneToMany(mappedBy = "assignedTo")
     private Set<TicketEntity> assignedTickets = new HashSet<TicketEntity>();
     private static final int assignedTicketCapacity = 4;
+    private Set<Role> roles;
 
     public void assignNewTicket(TicketEntity ticketEntity) {
         if(assignedTickets.size() < assignedTicketCapacity) {

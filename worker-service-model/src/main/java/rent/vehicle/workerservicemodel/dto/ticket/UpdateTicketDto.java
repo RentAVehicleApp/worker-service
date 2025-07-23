@@ -1,4 +1,4 @@
-package rent.vehicle.workerservicemodel.dto;
+package rent.vehicle.workerservicemodel.dto.ticket;
 
 import lombok.Getter;
 import lombok.Setter;
