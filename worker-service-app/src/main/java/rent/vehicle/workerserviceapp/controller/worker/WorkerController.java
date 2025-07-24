@@ -2,6 +2,7 @@ package rent.vehicle.workerserviceapp.controller.worker;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import rent.vehicle.workerserviceapp.service.worker.WorkerClientService;
 import rent.vehicle.workerservicemodel.common.common.CustomPage;
@@ -54,7 +55,7 @@ public class WorkerController {
     }
 
     @GetMapping(ApiPaths.PATH_WORKERS)
-    public CustomPage<WorkerWithTicketsDto> getAllSupporters(@RequestBody Pageable pageable){
+    public CustomPage<WorkerWithTicketsDto> getAllSupporters( @PageableDefault(page = 0, size = 20, sort = "id,asc") Pageable pageable) {
         return workerClientService.getAllWorkers(pageable);
     }
     @GetMapping(ApiPaths.PATH_SEARCH+ApiPaths.PATH_WORKERS)
