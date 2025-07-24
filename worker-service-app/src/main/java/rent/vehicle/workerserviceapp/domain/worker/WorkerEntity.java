@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
+import rent.vehicle.workerservicemodel.enums.Role;
 
 import java.util.HashSet;
 import java.util.Set;

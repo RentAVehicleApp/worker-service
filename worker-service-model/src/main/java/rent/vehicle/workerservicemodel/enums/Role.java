@@ -1,5 +1,5 @@
 package rent.vehicle.workerservicemodel.enums;
 
-public enum Roles {
+public enum Role {
     SUPPORTER,TECHNICAL,ADMIN
 }
