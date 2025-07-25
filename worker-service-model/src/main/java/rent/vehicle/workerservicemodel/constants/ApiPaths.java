@@ -1,7 +1,7 @@
 package rent.vehicle.workerservicemodel.constants;
 
 public class ApiPaths {
-    public static final String PATH_BASE = "/v1/worker";
+    public static final String PATH_BASE = "api/v1/worker";
     public static final String PATH_TICKET = "/ticket";
     public static final String PATH_TICKET_ID = "{ticketId}";
     public static final String PATH_WORKER_ID = "{workerId}";
