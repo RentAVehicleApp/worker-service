@@ -28,9 +28,9 @@ public interface WorkerClientService {
 
     int getWorkerWorkload(Long id);
 
-    ResponseTicketDto assignTicket(Long ticketId, Long supporterId);
+    ResponseTicketDto assignTicket(Long ticketId, Long workerId);
 
-    ResponseTicketDto reassignTicket(Long ticketId, Long supporterId);
+    ResponseTicketDto reassignTicket(Long ticketId, Long workerId);
 
     CustomPage<WorkerWithTicketsDto> getAllWorkers(Pageable pageable);
 

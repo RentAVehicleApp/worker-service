@@ -12,4 +12,5 @@ public class ApiPaths {
     public static final String PATH_REASSIGN = "/reassign";
     public static final String PATH_WORKERS = "/workers";
     public static final String PATH_WORKLOAD = "/workload";
+    public static final String PATH_HEALTH = "/health";
 }

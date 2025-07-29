@@ -23,27 +23,31 @@ import java.util.Map;
 public class WorkerController {
     private final WorkerClientService workerClientService;
 
+    @GetMapping(ApiPaths.PATH_HEALTH)
+    public String health() {
+        return "OK";
+    }
     @PostMapping
     public ResponseWorkerDto createWorker(@RequestBody CreateWorkerDto createWorkerDto) {
         return workerClientService.createWorker(createWorkerDto);
     }
     @PostMapping(ApiPaths.PATH_WORKER_ID)
-    public ResponseWorkerDto updateSupporter(@PathVariable Long workerId, @RequestBody UpdateWorkerDto updateWorkerDto) {
+    public ResponseWorkerDto updateWorker(@PathVariable Long workerId, @RequestBody UpdateWorkerDto updateWorkerDto) {
         return workerClientService.updateWorker(workerId,updateWorkerDto);
     }
     @GetMapping(ApiPaths.PATH_WORKER_ID)
-    public ResponseWorkerDto getSupporter(@PathVariable Long workerId) {
+    public ResponseWorkerDto getWorker(@PathVariable Long workerId) {
 
         return workerClientService.findWorker(workerId);
     }
     @DeleteMapping(ApiPaths.PATH_WORKER_ID)
-    public Boolean deleteSupporter(@PathVariable Long workerId) {
+    public Boolean deleteWorker(@PathVariable Long workerId) {
 
         return workerClientService.removeWorker(workerId);
     }
 
     @GetMapping(ApiPaths.PATH_WORKLOAD+ApiPaths.PATH_WORKER_ID)
-    public int GetSupporterWorkload(@PathVariable Long workerId){
+    public int getWorkerWorkload(@PathVariable Long workerId){
 
         return workerClientService.getWorkerWorkload(workerId);
     }
@@ -58,7 +62,7 @@ public class WorkerController {
     }
 
     @GetMapping(ApiPaths.PATH_WORKERS)
-    public CustomPage<WorkerWithTicketsDto> getAllSupporters( @PageableDefault(page = 0, size = 20, sort = "id,asc") Pageable pageable) {
+    public CustomPage<WorkerWithTicketsDto> getAllWorkers( @PageableDefault(page = 0, size = 20, sort = "id,asc") Pageable pageable) {
         return workerClientService.getAllWorkers(pageable);
     }
     @GetMapping(ApiPaths.PATH_SEARCH+ApiPaths.PATH_WORKERS)
