@@ -3,11 +3,14 @@ package rent.vehicle.workerserviceapp.service.worker;
 import org.springframework.data.domain.Pageable;
 import rent.vehicle.workerservicemodel.common.common.CustomPage;
 import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
+import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
 import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
 import rent.vehicle.workerservicemodel.dto.worker.CreateWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.ResponseWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.UpdateWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.WorkerWithTicketsDto;
+
+import java.util.Map;
 
 
 public interface WorkerClientService {
@@ -31,6 +34,7 @@ public interface WorkerClientService {
 
     CustomPage<WorkerWithTicketsDto> getAllWorkers(Pageable pageable);
 
-    CustomPage<ResponseWorkerDto> searchWorkers(GenericSearchRequest request);
+    CustomPage<ResponseWorkerDto> searchWorkers(String filter, Pageable pageable);
 
+    void autoAssignTicket(Long ticketId);
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import rent.vehicle.workerserviceapp.common.SearchCriteriaParser;
 import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 import rent.vehicle.workerserviceapp.event.TicketCreatedEventPublisher;
 import rent.vehicle.workerserviceapp.repository.ticket.TicketRepository;
@@ -29,6 +30,7 @@ public class TicketClientServiceImpl implements TicketClientService {
     private final TicketRepository ticketRepository;
     private final TicketCreatedEventPublisher publisher;
     private final GenericSpecificationBuilder<TicketEntity> ticketSpecificationBuilder;
+    private final SearchCriteriaParser searchCriteriaParser;
 
 
     @Override
@@ -98,7 +100,8 @@ public class TicketClientServiceImpl implements TicketClientService {
     }
 
     @Override
-    public CustomPage<ResponseTicketDto> searchTickets(GenericSearchRequest request) {
+    public CustomPage<ResponseTicketDto> searchTickets(String  filter, Pageable pageable) {
+        GenericSearchRequest request = searchCriteriaParser.buildSearchRequest(filter, pageable);
         String[] parts = request.getSort().split(",");
         //TODO поставить sort внутри спецификациибилдер
         String sortField = parts[0];
@@ -108,7 +111,7 @@ public class TicketClientServiceImpl implements TicketClientService {
 
         Sort sort = Sort.by(new Sort.Order(direction, sortField));
 
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<TicketEntity> spec = ticketSpecificationBuilder.buildFromRequest(request);
         Page<TicketEntity> page = ticketRepository.findAll(spec, pageable);

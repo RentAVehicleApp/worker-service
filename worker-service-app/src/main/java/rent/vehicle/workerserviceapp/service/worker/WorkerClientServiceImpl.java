@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import rent.vehicle.workerserviceapp.common.SearchCriteriaParser;
 import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 import rent.vehicle.workerserviceapp.domain.worker.WorkerEntity;
 import rent.vehicle.workerserviceapp.event.TicketCreatedEventPublisher;
@@ -17,15 +18,17 @@ import rent.vehicle.workerserviceapp.repository.worker.WorkerRepository;
 import rent.vehicle.workerserviceapp.service.specification.GenericSpecificationBuilder;
 import rent.vehicle.workerservicemodel.common.common.CustomPage;
 import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
+import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
 import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
 import rent.vehicle.workerservicemodel.dto.worker.CreateWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.ResponseWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.UpdateWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.WorkerWithTicketsDto;
+import rent.vehicle.workerservicemodel.enums.Operations;
 import rent.vehicle.workerservicemodel.exception.TicketCannotBeAssignedException;
 import rent.vehicle.workerservicemodel.exception.WorkerNotFoundException;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +42,7 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     private final TicketCreatedEventPublisher publisher;
     //ToDO change specification name
     private final GenericSpecificationBuilder<WorkerEntity> genericSpecificationBuilder;
+    private final SearchCriteriaParser searchCriteriaParser;
     private final GenericSpecificationBuilder<TicketEntity> ticketSpecificationBuilder;
 
 
@@ -156,7 +160,8 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     }
 
     @Override
-    public CustomPage<ResponseWorkerDto> searchWorkers(GenericSearchRequest request) {
+    public CustomPage<ResponseWorkerDto> searchWorkers(String filter, Pageable pageable) {
+        GenericSearchRequest request = searchCriteriaParser.buildSearchRequest(filter, pageable);
         String[] parts = request.getSort().split(",");
         String sortField = parts[0];
         Sort.Direction direction = parts.length > 1
@@ -165,13 +170,26 @@ public class WorkerClientServiceImpl implements WorkerClientService {
 
         Sort sort = Sort.by(new Sort.Order(direction, sortField));
 
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<WorkerEntity> spec = genericSpecificationBuilder.buildFromRequest(request);
         Page<WorkerEntity> page = workerRepository.findAll(spec, pageable);
         CustomPage<WorkerEntity> customPage = CustomPage.from(page);
         return customPage.map(entity -> modelMapper.map(entity, ResponseWorkerDto.class));
     }
+
+    @Override
+    public void autoAssignTicket(Long ticketId) {
+        Pageable pageable = PageRequest.of(0, 1);
+        Page<WorkerEntity> page = workerRepository.findAllByOrderByAssignedTicketsAsc(pageable);
+        if (page.hasContent()) {
+            WorkerEntity assignTo = page.getContent().getFirst();
+           assignTicket(ticketId, assignTo.getId());
+        } else {
+            throw new TicketCannotBeAssignedException(ticketId);
+        }
+    }
+
 
 }
 

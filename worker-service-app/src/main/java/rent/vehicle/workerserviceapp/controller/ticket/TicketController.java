@@ -1,6 +1,7 @@
 package rent.vehicle.workerserviceapp.controller.ticket;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import rent.vehicle.workerserviceapp.service.ticket.TicketClientService;
 import rent.vehicle.workerservicemodel.common.common.CustomPage;
@@ -45,8 +46,8 @@ public class TicketController {
         return ticketClientService.getAllTickets();
     }
     @GetMapping(ApiPaths.PATH_SEARCH+ApiPaths.PATH_TICKETS)
-    public CustomPage<ResponseTicketDto> searchTickets(@ModelAttribute GenericSearchRequest genericSearchRequest) {
-        return ticketClientService.searchTickets(genericSearchRequest);
+    public CustomPage<ResponseTicketDto> searchTickets(@RequestParam(required = false) String filter, Pageable pageable) {
+        return ticketClientService.searchTickets(filter,pageable);
     }
 
 
