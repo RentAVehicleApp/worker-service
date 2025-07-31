@@ -1,5 +1,6 @@
 package rent.vehicle.workerserviceapp.domain.ticket;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class TicketEntity {
     private Instant updatedDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "worker_id")
+    @JsonIgnoreProperties({"assignedTickets"})
     private WorkerEntity assignedTo;
 
     public void assignTo(WorkerEntity assignedTo){

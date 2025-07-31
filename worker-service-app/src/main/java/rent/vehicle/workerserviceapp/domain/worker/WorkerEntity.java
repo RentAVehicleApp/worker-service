@@ -1,6 +1,7 @@
 package rent.vehicle.workerserviceapp.domain.worker;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,8 +29,8 @@ public class WorkerEntity {
     private String login;
     @Column(name = "worker_name")
     private String name;
-    @Column(name = "assigned_tickets_to_worker")
-    @OneToMany(mappedBy = "assignedTo")
+    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"assignedTo"})
     private Set<TicketEntity> assignedTickets = new HashSet<TicketEntity>();
     private static final int assignedTicketCapacity = 4;
     private Set<Role> roles;
