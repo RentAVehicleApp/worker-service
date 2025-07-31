@@ -23,6 +23,7 @@ public class TicketEntity {
     private String createdByUserName;
     private String header;
     private String problem;
+    @Enumerated(EnumType.STRING)
     private TicketStatus ticketStatus;
     private Instant createdDate;
     private Instant updatedDate;
@@ -39,6 +40,19 @@ public class TicketEntity {
     }
     public boolean canBeAssigned(){
         return getTicketStatus() != TicketStatus.COMPLETED && getTicketStatus() != TicketStatus.CANCELLED;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        if (ticketStatus == null) {
+            ticketStatus = TicketStatus.TODO;
+        }
+        if (createdDate == null) {
+            createdDate = Instant.now();
+        }
+        if (updatedDate == null) {
+            updatedDate = Instant.now();
+        }
     }
 
 }

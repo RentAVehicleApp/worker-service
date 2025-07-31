@@ -1,13 +1,11 @@
 package rent.vehicle.workerservicemodel.dto.ticket;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import rent.vehicle.workerservicemodel.enums.TicketStatus;
+
 
 
 import java.time.Instant;
 
-@AllArgsConstructor
 @Getter
 public class CreateTicketDto {
     private Long id;
@@ -17,5 +15,4 @@ public class CreateTicketDto {
     private String problem;
     private final Instant createdDate =  Instant.now();
     private final Instant updatedAt =  Instant.now();
-    private final TicketStatus status = TicketStatus.TODO;
 }
