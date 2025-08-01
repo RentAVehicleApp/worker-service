@@ -2,16 +2,15 @@ package rent.vehicle.workerserviceapp.domain.ticket;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import rent.vehicle.workerserviceapp.domain.worker.WorkerEntity;
 import rent.vehicle.workerservicemodel.enums.TicketStatus;
 
 
 import java.time.Instant;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Getter
 @Setter

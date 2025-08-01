@@ -13,6 +13,6 @@ public class ResponseTicketDto {
     private String createdByUserName;
     private String header;
     private String problem;
-    private TicketStatus status;
+    private TicketStatus ticketStatus;
     private WorkerSummaryDto assignedTo;
 }

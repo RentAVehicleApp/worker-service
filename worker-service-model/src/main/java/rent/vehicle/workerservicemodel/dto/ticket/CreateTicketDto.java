@@ -1,12 +1,13 @@
 package rent.vehicle.workerservicemodel.dto.ticket;
 
 import lombok.Getter;
-
+import lombok.Setter;
 
 
 import java.time.Instant;
 
 @Getter
+@Setter
 public class CreateTicketDto {
     private Long id;
     private Long createdByUserId;
