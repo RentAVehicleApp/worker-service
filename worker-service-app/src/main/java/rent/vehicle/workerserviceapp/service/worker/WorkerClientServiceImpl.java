@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import rent.vehicle.workerserviceapp.common.SearchCriteriaParser;
 import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 import rent.vehicle.workerserviceapp.domain.worker.WorkerEntity;
@@ -47,15 +48,29 @@ public class WorkerClientServiceImpl implements WorkerClientService {
 
 
     @Override
+    @Transactional
     public ResponseWorkerDto createWorker(CreateWorkerDto createWorkerDto) {
         WorkerEntity workerEntity = new WorkerEntity();
         workerEntity.setName(createWorkerDto.getName());
         workerEntity.setLogin(createWorkerDto.getLogin());
         workerRepository.save(workerEntity);
-        return modelMapper.map(workerEntity, ResponseWorkerDto.class);
+        ResponseWorkerDto response = new ResponseWorkerDto();
+        response.setId(workerEntity.getId());
+        response.setLogin(workerEntity.getLogin());
+        response.setName(workerEntity.getName());
+
+        // Мапим коллекцию тикетов вручную, используя ModelMapper для каждого тикета
+        Set<ResponseTicketDto> ticketDtos = workerEntity.getAssignedTickets().stream()
+                .map(ticket -> modelMapper.map(ticket, ResponseTicketDto.class))
+                .collect(Collectors.toSet());
+
+        response.setAssignedTickets(ticketDtos);
+        return response;
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public ResponseWorkerDto updateWorker(Long id, UpdateWorkerDto updateWorkerDto) {
         Optional<WorkerEntity> workerEntity = workerRepository.findById(id);
         if (workerEntity.isPresent()) {
@@ -65,26 +80,47 @@ public class WorkerClientServiceImpl implements WorkerClientService {
             if (updateWorkerDto.getName() != null && !updateWorkerDto.getName().isEmpty()) {
                 workerEntity.get().setName(updateWorkerDto.getName());
             }
-            if (updateWorkerDto.getAssignedTickets() != null && !updateWorkerDto.getAssignedTickets().isEmpty()) {
-                workerEntity.get().setAssignedTickets(updateWorkerDto.getAssignedTickets().stream()
-                        .map(t->modelMapper.map(t, TicketEntity.class))
-                        .collect(Collectors.toSet()));
-            }
             workerRepository.save(workerEntity.get());
-            return modelMapper.map(workerEntity.get(),ResponseWorkerDto.class);
+
+            // Мапим основные поля через ModelMapper
+            ResponseWorkerDto response = new ResponseWorkerDto();
+            response.setId(workerEntity.get().getId());
+            response.setLogin(workerEntity.get().getLogin());
+            response.setName(workerEntity.get().getName());
+
+            // Мапим коллекцию тикетов вручную, используя ModelMapper для каждого тикета
+            Set<ResponseTicketDto> ticketDtos = workerEntity.get().getAssignedTickets().stream()
+                    .map(ticket -> modelMapper.map(ticket, ResponseTicketDto.class))
+                    .collect(Collectors.toSet());
+
+            response.setAssignedTickets(ticketDtos);
+            return response;
         }
         return null;
     }
 
+
     @Override
     public ResponseWorkerDto findWorker(Long id) {
-        WorkerEntity supporterEntity = workerRepository.findById(id).isPresent()?workerRepository.findById(id).get():null;
-        if(supporterEntity==null){
+        WorkerEntity workerEntity = workerRepository.findById(id).isPresent()?workerRepository.findById(id).get():null;
+        if(workerEntity==null){
             throw new WorkerNotFoundException(id);
         }
-        return modelMapper.map(supporterEntity,ResponseWorkerDto.class);
-    }
+        // Мапим основные поля через ModelMapper
+        ResponseWorkerDto response = new ResponseWorkerDto();
+        response.setId(workerEntity.getId());
+        response.setLogin(workerEntity.getLogin());
+        response.setName(workerEntity.getName());
 
+        // Мапим коллекцию тикетов вручную, используя ModelMapper для каждого тикета
+        Set<ResponseTicketDto> ticketDtos = workerEntity.getAssignedTickets().stream()
+                .map(ticket -> modelMapper.map(ticket, ResponseTicketDto.class))
+                .collect(Collectors.toSet());
+
+        response.setAssignedTickets(ticketDtos);
+        return response;
+    }
+    @Transactional
     @Override
     public Boolean removeWorker(Long id) {
         if(workerRepository.findById(id).isPresent()){
@@ -106,6 +142,7 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     }
 
     @Override
+    @Transactional
     public ResponseTicketDto assignTicket(Long ticketId, Long supporterId) {
         //TODO Add Security Validation for only supporters can assign Tickets
         TicketEntity ticketEntity = ticketRepository.findById(ticketId).get();
@@ -124,6 +161,7 @@ public class WorkerClientServiceImpl implements WorkerClientService {
         return modelMapper.map(TicketEntity.class,ResponseTicketDto.class);
     }
     @Override
+    @Transactional
     public ResponseTicketDto reassignTicket(Long ticketId, Long toSupporterId) {
         //TODO Add Security Validation for only supporters can reassign Tickets
         if(workerRepository.findById(toSupporterId).isPresent()&&ticketRepository.findById(ticketId).isPresent()){

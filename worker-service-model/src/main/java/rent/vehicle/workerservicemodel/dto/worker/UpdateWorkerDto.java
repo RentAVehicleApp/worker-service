@@ -10,5 +10,4 @@ import java.util.Set;
 public class UpdateWorkerDto {
     private String login;
     private String name;
-    private Set<CreateTicketDto> assignedTickets;
 }
