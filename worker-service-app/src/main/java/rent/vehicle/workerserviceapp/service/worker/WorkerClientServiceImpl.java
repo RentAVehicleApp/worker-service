@@ -26,9 +26,11 @@ import rent.vehicle.workerservicemodel.dto.worker.ResponseWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.UpdateWorkerDto;
 import rent.vehicle.workerservicemodel.dto.worker.WorkerWithTicketsDto;
 import rent.vehicle.workerservicemodel.enums.Operations;
+import rent.vehicle.workerservicemodel.enums.TicketStatus;
 import rent.vehicle.workerservicemodel.exception.TicketCannotBeAssignedException;
 import rent.vehicle.workerservicemodel.exception.WorkerNotFoundException;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -144,22 +146,34 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     @Override
     @Transactional
     public ResponseTicketDto assignTicket(Long ticketId, Long supporterId) {
-        //TODO Add Security Validation for only supporters can assign Tickets
-        TicketEntity ticketEntity = ticketRepository.findById(ticketId).get();
-        WorkerEntity workerEntity = workerRepository.findById(supporterId).get();
-        if(workerEntity==null||ticketEntity==null){
-            throw new RuntimeException();
-        }
-        if(ticketEntity.canBeAssigned()){
-            workerEntity.assignNewTicket(ticketEntity);
-        }else{
+        TicketEntity ticketEntity = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found: " + ticketId));
+        WorkerEntity workerEntity = workerRepository.findById(supporterId)
+                .orElseThrow(() -> new RuntimeException("Worker not found: " + supporterId));
+
+        if (!ticketEntity.canBeAssigned()) {
             throw new TicketCannotBeAssignedException(ticketId);
         }
+
+        // связываем обе стороны
+        workerEntity.assignNewTicket(ticketEntity);
         ticketEntity.assignTo(workerEntity);
+
+        // явные дефолты (если нужно)
+        if (ticketEntity.getTicketStatus() == null) {
+            ticketEntity.setTicketStatus(TicketStatus.TODO);
+        }
+        if (ticketEntity.getUpdatedDate() == null) {
+            ticketEntity.setUpdatedDate(Instant.now());
+        }
+
+        // Сохраняем. Порядок не критичен из-за каскада, но делаем оба для ясности
         ticketRepository.save(ticketEntity);
         workerRepository.save(workerEntity);
-        return modelMapper.map(TicketEntity.class,ResponseTicketDto.class);
+
+        return modelMapper.map(ticketEntity, ResponseTicketDto.class);
     }
+
     @Override
     @Transactional
     public ResponseTicketDto reassignTicket(Long ticketId, Long toSupporterId) {
