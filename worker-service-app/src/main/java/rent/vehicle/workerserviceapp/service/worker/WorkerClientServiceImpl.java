@@ -218,16 +218,17 @@ public class WorkerClientServiceImpl implements WorkerClientService {
         String sortField = parts[0];
         Sort.Direction direction = parts.length > 1
                 ? Sort.Direction.fromString(parts[1].trim())
-                : Sort.Direction.ASC; // по умолчанию ASC, если не указано
+                : Sort.Direction.ASC;
 
         Sort sort = Sort.by(new Sort.Order(direction, sortField));
-
         pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<WorkerEntity> spec = genericSpecificationBuilder.buildFromRequest(request);
         Page<WorkerEntity> page = workerRepository.findAll(spec, pageable);
         CustomPage<WorkerEntity> customPage = CustomPage.from(page);
-        return customPage.map(entity -> modelMapper.map(entity, ResponseWorkerDto.class));
+
+        // Используем ручной маппинг
+        return customPage.map(this::mapWorkerToDto);
     }
 
     @Override
@@ -241,7 +242,14 @@ public class WorkerClientServiceImpl implements WorkerClientService {
             throw new TicketCannotBeAssignedException(ticketId);
         }
     }
-
+    private ResponseWorkerDto mapWorkerToDto(WorkerEntity worker) {
+        ResponseWorkerDto dto = new ResponseWorkerDto();
+        dto.setId(worker.getId());
+        dto.setLogin(worker.getLogin());
+        dto.setName(worker.getName());
+        dto.setAssignedTickets(new HashSet<>()); // Пустой set для поиска
+        return dto;
+    }
 
 }
 
