@@ -11,10 +11,7 @@ import rent.vehicle.workerservicemodel.constants.ApiPaths;
 import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
 import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
 import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
-import rent.vehicle.workerservicemodel.dto.worker.CreateWorkerDto;
-import rent.vehicle.workerservicemodel.dto.worker.ResponseWorkerDto;
-import rent.vehicle.workerservicemodel.dto.worker.UpdateWorkerDto;
-import rent.vehicle.workerservicemodel.dto.worker.WorkerWithTicketsDto;
+import rent.vehicle.workerservicemodel.dto.worker.*;
 
 import java.util.Map;
 
@@ -69,6 +66,10 @@ public class WorkerController {
     @GetMapping(ApiPaths.PATH_SEARCH+ApiPaths.PATH_WORKERS)
     public CustomPage<ResponseWorkerDto> searchWorkers( @RequestParam(required = false) String filter,Pageable pageable) {
         return workerClientService.searchWorkers(filter,pageable);
+    }
+    @GetMapping(ApiPaths.PATH_LOGIN)
+    public WorkerAuthDto findByLogin(@RequestParam String login) {
+        return workerClientService.findByLogin(login);
     }
 
 

@@ -17,14 +17,12 @@ import rent.vehicle.workerserviceapp.event.TicketCreatedEventPublisher;
 import rent.vehicle.workerserviceapp.repository.ticket.TicketRepository;
 import rent.vehicle.workerserviceapp.repository.worker.WorkerRepository;
 import rent.vehicle.workerserviceapp.service.specification.GenericSpecificationBuilder;
+import rent.vehicle.workerserviceapp.service.specification.WorkerSpecification;
 import rent.vehicle.workerservicemodel.common.common.CustomPage;
 import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
 import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
 import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
-import rent.vehicle.workerservicemodel.dto.worker.CreateWorkerDto;
-import rent.vehicle.workerservicemodel.dto.worker.ResponseWorkerDto;
-import rent.vehicle.workerservicemodel.dto.worker.UpdateWorkerDto;
-import rent.vehicle.workerservicemodel.dto.worker.WorkerWithTicketsDto;
+import rent.vehicle.workerservicemodel.dto.worker.*;
 import rent.vehicle.workerservicemodel.enums.Operations;
 import rent.vehicle.workerservicemodel.enums.TicketStatus;
 import rent.vehicle.workerservicemodel.exception.TicketCannotBeAssignedException;
@@ -42,11 +40,9 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     private final ModelMapper modelMapper;
     private final WorkerRepository workerRepository;
     private final TicketRepository ticketRepository;
-    private final TicketCreatedEventPublisher publisher;
     //ToDO change specification name
     private final GenericSpecificationBuilder<WorkerEntity> genericSpecificationBuilder;
     private final SearchCriteriaParser searchCriteriaParser;
-    private final GenericSpecificationBuilder<TicketEntity> ticketSpecificationBuilder;
 
 
     @Override
@@ -242,6 +238,14 @@ public class WorkerClientServiceImpl implements WorkerClientService {
             throw new TicketCannotBeAssignedException(ticketId);
         }
     }
+
+    @Override
+    public WorkerAuthDto findByLogin(String login) {
+        Specification<WorkerEntity> spec = WorkerSpecification.findLogin(login);
+        WorkerEntity worker = workerRepository.findOne(spec).get();
+        return new WorkerAuthDto(worker.getId(), worker.getLogin(), worker.getRoles().stream().map(Enum::toString).collect(Collectors.toSet()));
+    }
+
     private ResponseWorkerDto mapWorkerToDto(WorkerEntity worker) {
         ResponseWorkerDto dto = new ResponseWorkerDto();
         dto.setId(worker.getId());
