@@ -1,5 +1,6 @@
 package rent.vehicle.workerserviceapp.service.worker;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
 import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
 import rent.vehicle.workerservicemodel.dto.worker.*;
 import rent.vehicle.workerservicemodel.enums.Operations;
+import rent.vehicle.workerservicemodel.enums.Role;
 import rent.vehicle.workerservicemodel.enums.TicketStatus;
 import rent.vehicle.workerservicemodel.exception.TicketCannotBeAssignedException;
 import rent.vehicle.workerservicemodel.exception.WorkerNotFoundException;
@@ -242,8 +244,17 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     @Override
     public WorkerAuthDto findByLogin(String login) {
         Specification<WorkerEntity> spec = WorkerSpecification.findLogin(login);
-        WorkerEntity worker = workerRepository.findOne(spec).get();
-        return new WorkerAuthDto(worker.getId(), worker.getLogin(), worker.getRoles().stream().map(Enum::toString).collect(Collectors.toSet()));
+        WorkerEntity worker = workerRepository.findOne(spec)
+                .orElseThrow(() -> new EntityNotFoundException("Worker not found with login: " + login));
+
+        return new WorkerAuthDto(
+                worker.getId(),
+                worker.getLogin(),
+                worker.getPassword(), // теперь вернет "123456"
+                worker.getRoles().stream()
+                        .map(Role::toString)
+                        .collect(Collectors.toList())
+        );
     }
 
     private ResponseWorkerDto mapWorkerToDto(WorkerEntity worker) {

@@ -40,4 +40,7 @@ public class WorkerEntity {
             assignedTickets.add(ticketEntity);
         }
     }
+    public String getPassword(){
+        return password;
+    }
 }
