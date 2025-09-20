@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=builder /app/worker-service-app/target/*.jar app.jar
 
 # Expose port
-EXPOSE 8080
+EXPOSE 3000
 
 # Run the application
 ENTRYPOINT ["java", "-Dspring.profiles.active=railway", "-jar", "app.jar"]
