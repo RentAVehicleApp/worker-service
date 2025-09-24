@@ -23,8 +23,8 @@ public class WorkerEntity {
     @Column(name = "worker_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //password
-    private static final String password = "123456";
+    @Column(name="worker_password")
+    private  String password;
     @Column(name = "worker_login")
     private String login;
     @Column(name = "worker_name")

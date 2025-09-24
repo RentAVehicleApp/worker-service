@@ -5,13 +5,10 @@ import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.*;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import rent.vehicle.workerservicemodel.dto.specification.GenericSearchRequest;
 import rent.vehicle.workerservicemodel.dto.specification.SearchCriteria;
-
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
