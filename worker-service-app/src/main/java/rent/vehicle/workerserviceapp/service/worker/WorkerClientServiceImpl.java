@@ -125,9 +125,9 @@ public class WorkerClientServiceImpl implements WorkerClientService {
     public Boolean removeWorker(Long id) {
         if(workerRepository.findById(id).isPresent()){
             workerRepository.deleteById(id);
-            return true;
+            return Boolean.TRUE;
         }
-        return false;
+        return Boolean.FALSE;
     }
 
 

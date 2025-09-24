@@ -54,7 +54,7 @@ public class WorkerController {
     public ResponseTicketDto assignTicket(@PathVariable Long ticketId, @PathVariable Long workerId){
         return workerClientService.assignTicket(ticketId,workerId);
     }
-    @PostMapping(ApiPaths.PATH_WORKER_ID+ApiPaths.PATH_TICKET+ApiPaths.PATH_TICKET_ID+ApiPaths.PATH_REASSIGN)
+    @PostMapping(ApiPaths.PATH_WORKER_ID+ApiPaths.PATH_TICKET+ApiPaths.PATH_TICKET_ID+ApiPaths.PATH_REASSIGN)//TODO FIX now working currently erasing ticket from one worker but the other dont get it
     public ResponseTicketDto reassignTicket(@PathVariable Long ticketId, @PathVariable Long workerId){
         return workerClientService.reassignTicket(ticketId,workerId);
     }
@@ -67,7 +67,7 @@ public class WorkerController {
     public CustomPage<ResponseWorkerDto> searchWorkers( @RequestParam(required = false) String filter,Pageable pageable) {
         return workerClientService.searchWorkers(filter,pageable);
     }
-    @GetMapping(ApiPaths.PATH_LOGIN)
+    @GetMapping(ApiPaths.PATH_LOGIN)//TODO add constant for Requesting Variable logi
     public WorkerAuthDto findByLogin(@RequestParam String login) {
         return workerClientService.findByLogin(login);
     }
