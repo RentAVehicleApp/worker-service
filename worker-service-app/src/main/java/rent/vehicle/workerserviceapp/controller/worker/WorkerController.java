@@ -68,7 +68,7 @@ public class WorkerController {
         return workerClientService.searchWorkers(filter,pageable);
     }
     @GetMapping(ApiPaths.PATH_LOGIN)
-    public WorkerAuthDto findByLogin(String login) {
+    public WorkerAuthDto findByLogin(@RequestParam String login) {
         return workerClientService.findByLogin(login);
     }
 
