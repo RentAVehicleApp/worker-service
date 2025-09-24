@@ -67,8 +67,8 @@ public class WorkerController {
     public CustomPage<ResponseWorkerDto> searchWorkers( @RequestParam(required = false) String filter,Pageable pageable) {
         return workerClientService.searchWorkers(filter,pageable);
     }
-    @GetMapping(ApiPaths.PATH_LOGIN)//TODO add constant for Requesting Variable logi
-    public WorkerAuthDto findByLogin(@RequestParam String login) {
+    @GetMapping(ApiPaths.PATH_LOGIN)
+    public WorkerAuthDto findByLogin(String login) {
         return workerClientService.findByLogin(login);
     }
 
