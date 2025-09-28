@@ -3,10 +3,9 @@ package rent.vehicle.workerserviceapp.domain.worker;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import rent.vehicle.workerserviceapp.domain.ticket.TicketEntity;
 import rent.vehicle.workerservicemodel.enums.Role;
 
@@ -23,8 +22,8 @@ public class WorkerEntity {
     @Column(name = "worker_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="worker_password")
-    private  String password;
+    @Column(name = "worker_password")
+    private String password;
     @Column(name = "worker_login")
     private String login;
     @Column(name = "worker_name")
@@ -36,11 +35,8 @@ public class WorkerEntity {
     private Set<Role> roles;
 
     public void assignNewTicket(TicketEntity ticketEntity) {
-        if(assignedTickets.size() < assignedTicketCapacity) {
+        if (assignedTickets.size() < assignedTicketCapacity) {
             assignedTickets.add(ticketEntity);
         }
-    }
-    public String getPassword(){
-        return password;
     }
 }

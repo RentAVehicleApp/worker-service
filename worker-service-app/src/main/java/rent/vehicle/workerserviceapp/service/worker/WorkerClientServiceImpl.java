@@ -53,6 +53,9 @@ public class WorkerClientServiceImpl implements WorkerClientService {
         WorkerEntity workerEntity = new WorkerEntity();
         workerEntity.setName(createWorkerDto.getName());
         workerEntity.setLogin(createWorkerDto.getLogin());
+        workerEntity.setRoles(createWorkerDto.getRoles().stream()
+                .map(Role::valueOf)
+                .collect(Collectors.toSet()));
         workerRepository.save(workerEntity);
         ResponseWorkerDto response = new ResponseWorkerDto();
         response.setId(workerEntity.getId());
