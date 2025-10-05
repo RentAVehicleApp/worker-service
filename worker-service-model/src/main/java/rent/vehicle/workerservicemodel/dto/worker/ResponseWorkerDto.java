@@ -1,9 +1,6 @@
 package rent.vehicle.workerservicemodel.dto.worker;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import rent.vehicle.workerservicemodel.dto.ticket.ResponseTicketDto;
 
 import java.util.Set;
@@ -11,6 +8,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ResponseWorkerDto {
     private Long id;
     private String login;
