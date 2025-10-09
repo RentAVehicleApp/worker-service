@@ -31,15 +31,17 @@ public class LoggingAspect {
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-    @Pointcut("execution(public * rent.vehicle.workerserviceapp.controller.worker.*.*(..))")
+        @Pointcut("execution(public * rent.vehicle.workerserviceapp.controller.worker.*.*(..))||execution(public * rent.vehicle.workerserviceapp.controller.ticket.*.*(..))")
     public void controllerLog() {
 
     }
 
-    @Pointcut("execution(public * rent.vehicle.workerserviceapp.service.worker.WorkerClientServiceImpl.*(..))")
+
+    @Pointcut("execution(public * rent.vehicle.workerserviceapp.service.worker.*.*(..))||execution(public * rent.vehicle.workerserviceapp.service.ticket.*.*(..))")
     public void serviceLog() {
 
     }
+
 
     @Before("controllerLog()")
     public void doBeforeController(JoinPoint joinPoint) {
@@ -58,6 +60,7 @@ public class LoggingAspect {
         }
     }
 
+
     @Before("serviceLog()")
     public void doBeforeService(JoinPoint joinPoint) {
         String className = joinPoint.getSignature().getDeclaringTypeName();
@@ -71,6 +74,7 @@ public class LoggingAspect {
                 methodName,
                 stringArgs);
     }
+
 
     @AfterReturning(returning = "returnObject", pointcut = "controllerLog()")
     public void doAfterReturning(Object returnObject){
